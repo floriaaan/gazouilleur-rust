@@ -13,4 +13,5 @@ pub fn get(id: i32) -> Json<User> {
 #[post("/register", data = "<user_data>")]
 pub fn create(user_data: String) {
     // code to register user
+    println!("user_data: {}", user_data);
 }

@@ -1,36 +1,28 @@
-use crate::models::gazouilli::Gazouilli;
+use crate::models::gazouilli::{Gazouilli, NewGazouilli};
 use rocket::{get, post, serde::json::Json};
+use crate::libs::database::establish_connection;
 
-#[get("/<id>")]
-pub fn get(id: i32) -> Json<Gazouilli> {
-    let gazouilli = Gazouilli {
-        id,
-        username: String::from("username"),
-        content: String::from("content"),
-        timestamp: chrono::Utc::now(),
-    };
-    return gazouilli.to_json();
+#[get("/<gazouilli_id>")]
+pub fn get(gazouilli_id: i32) -> Json<Gazouilli> {
+    // todo: use singleton to get connection
+    let connection = &mut establish_connection();
+    let gazouilli = Gazouilli::get_by_id(connection, gazouilli_id);
+    return Json(gazouilli)
 }
 
 #[get("/")]
 pub fn get_all() -> Json<Vec<Gazouilli>> {
-    return Json(vec![
-        Gazouilli {
-            id: 1,
-            username: String::from("username"),
-            content: String::from("content"),
-            timestamp: chrono::Utc::now(),
-        },
-        Gazouilli {
-            id: 2,
-            username: String::from("username"),
-            content: String::from("content"),
-            timestamp: chrono::Utc::now(),
-        },
-    ]);
+    // todo: use singleton to get connection
+    let connection = &mut establish_connection();
+    let gazouillis: Vec<Gazouilli> = Gazouilli::get_many(connection);
+    return Json(gazouillis);
 }
 
 #[post("/", data = "<gazouilli>")]
-pub fn create(gazouilli: String) {
-    // code to save gazouilli to the database
+pub fn create(gazouilli: Json<NewGazouilli>) -> Json<Gazouilli> {
+    // todo: use singleton to get connection
+    let connection = &mut establish_connection();
+
+    let gazouilli = Gazouilli::insert(connection, gazouilli.into_inner());
+    return Json(gazouilli);
 }

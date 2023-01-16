@@ -1,18 +1,17 @@
 mod controllers;
+mod libs;
 mod models;
+mod schema;
 use controllers::{gazouilli, user};
 
 #[macro_use]
 extern crate rocket;
-use rocket::{get, http::Status, serde::json::Json};
+use rocket::{get, http::Status, serde::json::Json, Request};
 
 #[get("/")]
 fn index() -> Result<Json<String>, Status> {
-    Ok(Json(String::from("Hello from rust and mongoDB")))
+    Ok(Json("{\"message\": \"Hello, world!\"}".to_string()))
 }
-// fn index() -> &'static str {
-//     "Hello, world!"
-// }
 
 #[launch]
 fn rocket() -> _ {
