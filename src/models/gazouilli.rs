@@ -3,7 +3,7 @@ use chrono::NaiveDateTime;
 use diesel::{
     prelude::{Identifiable, Queryable},
     query_dsl::methods::FilterDsl,
-    ExpressionMethods, PgConnection, RunQueryDsl, Insertable,
+    ExpressionMethods, Insertable, PgConnection, RunQueryDsl,
 };
 use rocket::serde::{json::Json, Deserialize, Serialize};
 
@@ -34,13 +34,16 @@ impl Gazouilli {
         })
     }
 
-    pub fn get_by_id(connection: &mut PgConnection, gazouilli_id: i32) -> Gazouilli {
+    pub fn get_by_id(
+        connection: &mut PgConnection,
+        gazouilli_id: i32,
+    ) -> Option<Gazouilli> {
         use crate::schema::gazouillis::dsl::{gazouillis, id};
 
         return gazouillis
             .filter(id.eq(gazouilli_id))
             .first::<Gazouilli>(connection)
-            .expect("Error loading gazouilli");
+            .ok();
     }
 
     pub fn get_many(connection: &mut PgConnection) -> Vec<Gazouilli> {
@@ -57,6 +60,6 @@ impl Gazouilli {
         return diesel::insert_into(gazouillis_table)
             .values(gazouilli)
             .get_result(connection)
-            .expect("Error saving new gazouilli")
+            .expect("Error saving new gazouilli");
     }
 }
