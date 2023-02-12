@@ -17,7 +17,7 @@ pub fn get(gazouilli_id: i32) -> Result<Json<Gazouilli>, Status> {
 pub fn get_all() -> Result<Json<Vec<Gazouilli>>, Status> {
     // todo: use singleton to get connection
     let connection = &mut establish_connection();
-    let gazouillis: Vec<Gazouilli> = Gazouilli::get_many(connection);
+    let gazouillis: Vec<Gazouilli> = Gazouilli::get_all(connection);
     return Ok(Json(gazouillis));
 }
 

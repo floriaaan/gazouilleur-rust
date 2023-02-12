@@ -46,7 +46,7 @@ impl Gazouilli {
             .ok();
     }
 
-    pub fn get_many(connection: &mut PgConnection) -> Vec<Gazouilli> {
+    pub fn get_all(connection: &mut PgConnection) -> Vec<Gazouilli> {
         use crate::schema::gazouillis::dsl::gazouillis;
 
         return gazouillis

@@ -4,8 +4,8 @@ use rocket::{
 };
 
 #[catch(404)]
-pub fn not_found(req: &Request) -> Json<Value> {
-    Json(json!({
+pub fn not_found(req: &Request) -> Result<Json<Value>, Json<Value>> {
+    Err(Json(json!({
         "status": "error",
         "reason": "Not Found",
         "message": "The requested resource could not be found but may be available again in the future.",
@@ -16,12 +16,12 @@ pub fn not_found(req: &Request) -> Json<Value> {
             "method": req.method().as_str(),
         }
 
-    }))
+    })))
 }
 
 #[catch(422)]
-pub fn unprocessable_entity(req: &Request) -> Json<Value> {
-    Json(json!({
+pub fn unprocessable_entity(req: &Request) -> Result<Json<Value>, Json<Value>> {
+    Err(Json(json!({
         "status": "error",
         "reason": "Unprocessable Entity",
         "message": "The request was well-formed but was unable to be followed due to semantic errors.",
@@ -30,14 +30,14 @@ pub fn unprocessable_entity(req: &Request) -> Json<Value> {
         "req": {
             "uri": req.uri().to_string(),
             "method": req.method().as_str(),
-            
+
         }
 
-    }))
+    })))
 }
 #[catch(500)]
-pub fn internal_error(req: &Request) -> Json<Value> {
-    Json(json!({
+pub fn internal_error(req: &Request) -> Result<Json<Value>, Json<Value>> {
+    Err(Json(json!({
         "status": "error",
         "reason": "Internal Server Error",
         "message": "The server encountered an unexpected condition that prevented it from fulfilling the request.",
@@ -47,5 +47,5 @@ pub fn internal_error(req: &Request) -> Json<Value> {
             "uri": req.uri().to_string(),
             "method": req.method().as_str(),
         }
-    }))
+    })))
 }
